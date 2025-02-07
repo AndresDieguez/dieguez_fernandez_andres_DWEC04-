@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Carta - Magic Insight</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/estilos.css">
+  <link rel="stylesheet" href="../css/carta.css">
+  
+</head>
+<body>
+  <header>
+    <div class="container mt-4">
+      <h1 class="text-center logo">
+        <span>Magic Insight</span>
+        <a href="/"><img class="img-fluid" src="../imagenes/logo-magic.jpg" alt="Logo de Magic: The Gathering, juego de cartas coleccionables" class="img-fluid"></a>
+      </h1>
+    </div>
+  </header>
+<main>
+  <div class="container mt-4">
+    <h1 class="mb-3 d-inline">Detalles de la Carta</h1>
+    <div class="d-inline-block align-bottom otra-busqueda"><a href="../index.html" class="btn btn-primary">Hacer otra búsqueda</a></div> 
+    <div id="card-details" class="row mt-1 g-5">
+      <!-- Aquí se mostrará la carta y sus detalles -->
+       Cargando carta...
+    </div>
+  
+    <div class="row mt-3">
+      <div class="col">
+        <div id="enlaces-interes">
+          <!-- Aquí se mostrará los enlaces de interes -->
+           Cargando enlaces de interes...
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mt-3">    
+      <div class="col-12 col-md-6">
+        <h4>Precio de la Carta en Diferentes Monedas-Mercados</h4>
+        <canvas id="cardChart">Cargando gráfico de Precios...</canvas> <!-- Llamada al canvas para la gráfica -->
+      </div>
+      <p id="tix" class="tix">
+      </p>
+    </div>
+    <div class="row">
+      <div id="otra-busqueda" class="col-12 col-md-6 text-center mb-3">
+        <!-- boton de hacer otra busqueda    -->
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-dark text-light text-center py-3 mt-5">
+  <p>&copy; 2025 Magic Insight. Todos los derechos reservados.</p>
+  <p><a href="#" class="text-light">Política de Privacidad</a> | <a href="#" class="text-light">Términos de Uso</a></p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Incluir Chart.js -->
+<script type="module" src="../js/card.js"></script>
+
+</body>
+</html>
+

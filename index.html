@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic Insight</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+  <div class="container mt-4">
+    <header>
+      <h1 class="text-center logo">
+        <span>Magic Insight</span>
+        <a href="/"><img class="img-fluid" src="imagenes/logo-magic.jpg" alt="Magic: The Gathering Spoiler"></a>
+      </h1>
+      <div class="formulario-busqueda" id="formularioBusqueda">
+        <form id="search-form" class="d-flex justify-content-center">
+          <input type="text" id="search-input" class="form-control w-50 me-2"
+            placeholder="Buscar cartas por nombre o por c:red t:planeswalker">
+
+          <select id="format-select" class="form-select w-25 me-2">
+            <option value="" selected>Todos los formatos</option>
+            <option value="standard">Standard</option>
+            <option value="future">Future Standard</option>
+            <option value="historic">Historic</option>
+            <option value="modern">Modern</option>
+            <option value="legacy">Legacy</option>
+            <option value="pauper">Pauper</option>
+            <option value="vintage">Vintage</option>
+            <option value="commander">Commander</option>
+            <option value="brawl">Brawl</option>
+            <option value="pioneer">Pioneer</option>
+            <option value="alchemy">Alchemy</option>
+            <option value="duel">Duel Commander</option>
+            <option value="oldschool">Old School 93/94</option>
+            <option value="premodern">Premodern</option>
+          </select>
+
+          <select id="set-select" class="form-select w-25 me-2">
+            <option value="">Todos los sets</option>
+            <!-- Los sets se cargarán dinámicamente aquí -->
+          </select>
+
+          <select id="language-select" class="form-select w-25 me-2">
+            <option value="es" selected>Español</option>
+            <option value="en">Inglés</option>
+            <option value="fr">Francés</option>
+            <option value="de">Alemán</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Portugués</option>
+            <option value="jp">Japonés</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Buscar</button>
+          <!-- Icono de información para abrir el modal -->
+          <i class="ms-2 bi bi-info-circle text-info fs-4" role="button" data-bs-toggle="modal"
+            data-bs-target="#modalBusquedaAvanzada" title="Búsqueda Avanzada"></i>
+        </form>
+      </div>
+
+
+      <!-- Modal de Búsqueda Avanzada -->
+      <div class="modal fade" id="modalBusquedaAvanzada" tabindex="-1" aria-labelledby="tituloBusquedaAvanzada"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="tituloBusquedaAvanzada">Búsqueda Avanzada</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <div class="referencia">
+                <p>Se incluye un gran conjunto de palabras clave y expresiones (incluso regulares) que puedes usar
+                  para filtrar cartas de Magic y hacer busquedas avanzadas
+                  <br>Se pueden combinar y hay muchas posibilidades. Mas información en <a
+                    href="https://scryfall.com/docs/syntax">https://scryfall.com/docs/syntax</a>
+                </p>
+                <ul>
+                  <li><strong>t:</strong> (tipo de la carta) Ejemplos: <code>t:dragon</code> (tipo Dragón),
+                    <code>t:legend</code> (tipo Legendaria)
+                  </li>
+                  <li><strong>c:</strong> (color de la carta) Ejemplos: <code>c:r</code> o <code>color:red</code> (color
+                    rojo), <code>c:rg</code> (rojo y verde), <code>c>=rg -c:black</code> (rojo, verde y otros, pero sin
+                    negro)</li>
+                  <li><strong>m:</strong> (coste de maná) Ejemplo: <code>mana:{G}{U}</code> (carta con coste de maná
+                    {G}{U})</li>
+                  <li><strong>r:</strong> (rareza de las cartas) Ejemplos: <code>r:common</code> (común),
+                    <code>r:mythic</code> (mítica)
+                  </li>
+                  <li><strong>s:</strong> (set de cartas) Ejemplo: <code>s:khm</code> (cartas del set Kaldheim)</li>
+                  <li><strong>e:</strong> (edición) Ejemplo: <code>e:khm</code> (cartas de la edición Kaldheim)</li>
+                  <li><strong>f:</strong> (formato) Ejemplo: <code>f:standard</code> (cartas legales en formato
+                    Estándar)</li>
+                  <li><strong>a:</strong> (artista de la ilustración) Ejemplo: <code>a:"John Avon"</code> (cartas
+                    ilustradas por John Avon)</li>
+                  <li><strong>lang:</strong> (idioma de la carta) Ejemplo: <code>lang:es</code> (cartas en español)</li>
+                  <li><strong>order:</strong> (ordena las cartas buscadas) Ejemplo:
+                    <code>order:color, order:artist, order:cmc, order:power, order:toughness, order:set, order:name, order:usd, order:rarity, order:released, order:spoiled, order:edhrec, order:penny, order:review</code>
+                  </li>
+                  <li><strong><code>direction:asc o direction:desc</code>(orden ascendente o descentende)</strong></li>
+                  <li><strong>year=</strong> (año de edición) Ejemplo: <code>year=2025</code> (cartas publicadas en
+                    2025)</li>
+                  <li><strong>!</strong> (búsqueda exacta por nombre) Ejemplo: <code>!Black Lotus</code> (encuentra
+                    exactamente la carta "Black Lotus")</li>
+                  <li><strong>Condiciones anidadas:</strong> Ejemplo: <code>t:legendary (t:goblin OR t:elf)</code>
+                    (cartas legendarias que son Goblin o Elfo)</li>
+                  <li><strong>Expresiones regulares:</strong> Ejemplo: <code>name:/\bizzet\b/</code> (cartas cuyo nombre
+                    contiene exactamente "izzet")</li>
+                  <li><strong>is:</strong> (atributos específicos) Ejemplo: <code>is:foil</code> (cartas en versión
+                    foil)</li>
+                  <li><strong>usd>=50</strong> (precio en dólares mayor o igual a 50) Ejemplo: <code>usd>=50</code>
+                    (cartas con precio mínimo de 50 dólares)</li>
+                </ul>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <!-- Modal de Información sobre Magic: The Gathering -->
+      <div class="modal fade" id="modalMagic" tabindex="-1" aria-labelledby="tituloMagic" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="tituloMagic">Magic: The Gathering</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <h5>Descripción</h5>
+              <p><strong>Magic: The Gathering</strong> (MTG) es un juego de cartas coleccionables creado por el
+                matemático <strong>Richard Garfield</strong> y publicado por <strong>Wizards of the Coast</strong> en
+                <strong>1993</strong>. Es considerado el primer y más popular juego de su tipo, combinando estrategia,
+                construcción de mazos y partidas con una profunda temática de fantasía.
+              </p>
+
+              <h5>Jugadores y Mecánica</h5>
+              <p>El juego puede ser jugado por <strong>dos o más jugadores</strong>, aunque el formato más común es de
+                <strong>uno contra uno</strong>. Cada jugador asume el papel de un <strong>planeswalker</strong>, un
+                poderoso hechicero que usa cartas para invocar criaturas, lanzar hechizos y derrotar a su oponente
+                reduciendo sus <strong>20 puntos de vida a 0</strong>.
+              </p>
+
+              <h5>Precios de Cartas</h5>
+              <p>Al ser un juego coleccionable, algunas cartas alcanzan precios exorbitantes en el mercado. Ejemplos
+                incluyen:</p>
+              <ul>
+                <li><strong>Black Lotus</strong> (Edición Alpha) – Más de <strong>500.000 USD</strong> en subastas.</li>
+                <li>En 2022 el cantante Post Malone <a href="https://www.3djuegos.com/pc/noticias/el-cantante-post-malone-tiene-la-carta-mas-cara-de-la-220622-122969" target="_blank">adquirio un Black Lotus</a> firmado por <strong>800.000 USD</strong> o la
+                carta del <a href="https://geektyrant.com/news/post-malone-reportedly-pays-over-26-million-for-magic-the-gatherings-the-one-ring-card" target="_blank">anillo único</a> por <strong>2,6 millones de dolares</strong> </li>                
+                <li><strong>Ancestral Recall</strong> y <strong>Mox Sapphire</strong> – Cartas del conjunto
+                  <strong>Power Nine</strong> que pueden superar los <strong>10.000 USD</strong>.
+                </li>
+              </ul>
+
+              <h5>Torneos y Premios</h5>
+              <p>Magic tiene un competitivo circuito de torneos, incluyendo el <strong>Pro Tour</strong> y el
+                <strong>Campeonato Mundial</strong>. Los premios pueden variar, pero en eventos como el <strong>Magic
+                  World Championship</strong>, los ganadores pueden recibir hasta <strong>100.000 USD en
+                  premios</strong>, con bolsas totales que superan los <strong>500.000 USD</strong>.
+              </p>
+
+              <p>Magic sigue evolucionando con nuevos sets y mecánicas, atrayendo tanto a jugadores casuales como a
+                profesionales en el mundo de los eSports de cartas.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h2 id="tituloSet" class="text-center mb-5 mt-5">
+          <!-- aqui el titulo del set -->
+        </h2>
+      </div>
+
+      <div id="cards-container" class="row g-4 text-center">
+        <div class="col-md-4 datos-stad">
+          <h5>Total de Cartas</h5>
+          <span id="total-cards">Cargando...</span>
+        </div>
+        <div class="col-md-4 datos-stad">
+          <h5>Total de Sets</h5>
+          <span id="total-sets">Cargando...</span>
+        </div>
+        <div class="col-md-4 datos-stad border-0">
+          <h5>Último Set Agregado</h5>
+          <span id="latest-set">Cargando...</span>
+        </div>
+        <div class="col-12">
+          <h2 class="text-center mt-5 mb-3">Bienvenido a Magic Insight</h2>
+          <p class="text-center lead">
+            Explora la colección de cartas de <strong><a href="#" data-bs-toggle="modal"
+                data-bs-target="#modalMagic">Magic: The Gathering</a></strong>.
+            Utiliza los filtros para buscar cartas por color, formato, idioma y sets específicos. Consulta precios de
+            tus cartas favoritas crea un mazo imbatible
+            ¡Descubre nuevas estrategias y encuentra tus cartas favoritas!
+            <br>
+          </p>
+          <h3 class="mb-4">Adelante Planeswalker!!!</h3>
+
+          <a href="index.html?q=t%3Aplaneswalker+lang%3Aes">
+            <img class="img-fluid pl" src="imagenes/planeswalkers.jpg" alt="planeswalkers">
+          </a>
+        </div>
+        <div class="col-12">
+          <h2 class="text-center mt-4">Descubre 6 Cartas Aleatorias y juega tu mejor mano</h2>
+          <div class="position-relative contenedor-cartas-ramdom">
+            <div id="random-cards-container">
+              <!-- Aquí se insertarán las cartas aleatorias dinámicamente -->
+               <p class="text-center">Cargando...</p>
+            </div>
+            <div class="mano">
+              <img src="imagenes/mano.png" alt="mano">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="pagination" class="text-center mt-4 mb-4">
+        <button id="load-more" class="btn btn-secondary">Cargar más cartas</button>
+      </div>
+    </main>
+  </div>
+    <!-- Pie de página -->
+  <footer class="bg-dark text-light text-center py-3">
+    <p>&copy; 2025 Magic Insight. Todos los derechos reservados.</p>
+    <p><a href="#" class="text-light">Política de Privacidad</a> | <a href="#" class="text-light">Términos de Uso</a></p>
+  </footer>
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="module" src="js/script.js"></script>
+</body>
+
+</html>
