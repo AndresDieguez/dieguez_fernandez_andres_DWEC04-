@@ -91,7 +91,6 @@ async function fetchSets() {
 
 // Función para obtener cartas desde la API de Scryfall
 async function fetchCards(query, page = 1) {
-    //const url = `https://api.scryfall.com/cards/search?q=${query}&page=${page}`;
     const cardsContainer = document.getElementById("cards-container");
     
     // Solo mostrar el mensaje de carga en la primera página
@@ -100,13 +99,7 @@ async function fetchCards(query, page = 1) {
     }
 
     try {
-        //const response = await fetch(url);
-        //if (!response.ok) {
-        //    throw new Error(`Error en la solicitud: ${response.statusText}`);
-        //}
-        //const data = await response.json();
-
-        const cartasBuscadas = await cardAPI.buscarCartas(query,page);
+        const cartasBuscadas = await cardAPI.searchCards(query,page);
         console.log('datos de la consulta clase: ',cartasBuscadas);
         // Eliminar el mensaje de carga si está presente
         const loadingMessage = document.getElementById("loading-message");
@@ -213,7 +206,7 @@ async function obtenerCartasAleatorias() {
 
     try {
         // Crear un array de promesas para obtener 6 cartas aleatorias en paralelo
-        const promises = Array.from({ length: 6 }, () => cardAPI.cartasRamdon());
+        const promises = Array.from({ length: 6 }, () => cardAPI.fetchRandomCard());
         const cards = await Promise.all(promises);
 
         // Procesar y mostrar las cartas obtenidas
@@ -246,10 +239,7 @@ document.getElementById("search-form").addEventListener("submit", function (even
 
     let query = "";
 
-    if (searchInput) {
-        query = encodeURIComponent(searchInput);
-    }
-
+    if (searchInput) query = encodeURIComponent(searchInput);
     if (setValue) query += `+set:${encodeURIComponent(setValue)}`;
     if (formatValue) query += `+f%3A${encodeURIComponent(formatValue)}`;
     if (languageValue && languageValue !== 'es') query += `+lang%3A${encodeURIComponent(languageValue)}`;

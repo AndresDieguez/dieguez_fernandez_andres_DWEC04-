@@ -1,8 +1,12 @@
 class CardAPI {
-    static baseURL = 'https://api.scryfall.com/';
-
+  
+    constructor(baseURL = 'https://api.scryfall.com/') {
+        this.baseURL = baseURL; // Guardamos la URL base en la instancia
+    }
+    
     async fetchData(endpoint) {
-        const url = `${CardAPI.baseURL}${endpoint}`;
+        const url = new URL(`${this.baseURL}${endpoint}`);
+
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error en la API: ${response.status} ${response.statusText}`);
@@ -33,17 +37,16 @@ class CardAPI {
         return this.fetchData(`sets/${setQuery}`);
     }
 
-    async buscarCartas(query, page = 1) {
+    async searchCards(query, page = 1) {
         return this.fetchData(`cards/search?q=${query}&page=${page}`);
     }
 
     // Obtener una carta aleatoria
-    async cartasRamdon() {
+    async fetchRandomCard() {
         return this.fetchData('cards/random');
     }
     
 }
 
 export default CardAPI;
-// Método para buscar un set por su identificador
 

@@ -16,34 +16,24 @@ async function cargarDetalleCarta() {
   }
 
   try {
-      // Esperamos a que se obtengan los datos de la API
-      const carta = await cardAPI.fetchCardDetails(cardId);
-      // Renderizamos los detalles de la carta
-      renderCardDetails(carta);
+      // Esperamos a que se obtengan los datos de la API, 
+      // obtenemos todos los detalles que necesitamos de la carta instanciando la clase con new CardAPI() 
+      // la guardamos en const carta.
+      // https://api.scryfall.com/cards/${id}
+      const carta = await cardAPI.fetchCardDetails(cardId);      
+      renderCardDetails(carta); // Renderizamos los detalles de la carta
   } catch (error) {
       console.error('Error al cargar los detalles de la carta:', error);
       document.getElementById('card-details').innerHTML = '<p class="text-danger">Error al cargar los datos de la carta.</p>';
   }
 }
 
-function convertManaToIcons(manaCost) {
-  // Si no se especifica coste de maná, devolvemos un mensaje
-  if (!manaCost) return "No especificado";
-
-  return manaCost.replace(/\{([^}]+)\}/g, (match, symbol) => {
-    // Sanitizamos el símbolo eliminando la barra (si existe) y convertimos a mayúsculas
-    const sanitizedSymbol = symbol.replace('/', '').toUpperCase();
-
-    // Generamos la URL de la imagen para el símbolo de maná
-    const imgUrl = `https://svgs.scryfall.io/card-symbols/${sanitizedSymbol}.svg`;
-
-    // Devolvemos la etiqueta de imagen
-    return `<img src="${imgUrl}" alt="${symbol}" title="${symbol}" class="mana-icon">`;
-  });
-}
-
-
-// Función para renderizar los detalles de la carta
+// Función para renderizar los detalles de la carta, cambiado el texto de coste por iconos
+// cojemos el precio del json en idioma ingles pues solo viene ahí
+// cambiamos la fecha a formato español
+// añadimos la funcionalidad de voltear la carta si contiene dos caras
+// generamos los enlaces de interés
+// llamamos a la funcion que crea la grafica
 function renderCardDetails(carta) {
   const cardDetails = document.getElementById('card-details');
   if (!cardDetails) {
@@ -157,6 +147,57 @@ function renderCardDetails(carta) {
 
 }
 
+function convertManaToIcons(manaCost) {
+  // Si no se especifica coste de maná, devolvemos un mensaje
+  if (!manaCost) return "No especificado";
+
+  return manaCost.replace(/\{([^}]+)\}/g, (match, symbol) => {
+    // Sanitizamos el símbolo eliminando la barra (si existe) y convertimos a mayúsculas
+    const sanitizedSymbol = symbol.replace('/', '').toUpperCase();
+
+    // Generamos la URL de la imagen para el símbolo de maná
+    const imgUrl = `https://svgs.scryfall.io/card-symbols/${sanitizedSymbol}.svg`;
+
+    // Devolvemos la etiqueta de imagen
+    return `<img src="${imgUrl}" alt="${symbol}" title="${symbol}" class="mana-icon">`;
+  });
+}
+
+// Función para obtener el precio de la carta en inglés pues en otros idiomas no vienen los precios
+async function buscarPrecioIngles(set, name) {
+
+  try {
+
+    const cartaEnIngles = await cardAPI.fetchPriceInEnglish(set, name);
+    console.log("Datos en inglés de la carta:", cartaEnIngles);
+
+    const priceElement = document.getElementById('card-price');
+    const cardmarketElement = document.getElementById('cardmarket-link');
+
+    if (cartaEnIngles.prices?.eur) {
+      priceElement.textContent = `${cartaEnIngles.prices.eur} €`;
+    } else {
+      priceElement.textContent = 'No disponible';
+    }
+
+    if (cartaEnIngles.purchase_uris?.cardmarket) {
+      cardmarketElement.innerHTML = `
+        <a href="${cartaEnIngles.purchase_uris.cardmarket}" target="_blank" class="btn btn-primary mt-2">
+          Cómprala en Cardmarket
+        </a>
+      `;
+    }
+
+    // Llamada a la función de generar gráfica
+    generateCardChart(cartaEnIngles);
+    // añadimos el boton de otra busqueda
+    document.getElementById('otra-busqueda').innerHTML= '<a href="../index.html" class="btn btn-primary">Hacer otra búsqueda</a>'
+  } catch (error) {
+    console.error('Error al obtener el precio en inglés:', error);
+    document.getElementById('card-price').textContent = 'No disponible';
+  }
+}
+
 // Función para generar la gráfica con chart.js
 function generateCardChart(carta) {
   const ctx = document.getElementById('cardChart').getContext('2d');
@@ -211,41 +252,6 @@ function generateCardChart(carta) {
   });
 }
 
-// Función para obtener el precio de la carta en inglés pues en otros idiomas no vienen los precios
-async function buscarPrecioIngles(set, name) {
-
-  try {
-
-    const cartaEnIngles = await cardAPI.fetchPriceInEnglish(set, name);
-    console.log("Datos en inglés de la carta:", cartaEnIngles);
-
-    const priceElement = document.getElementById('card-price');
-    const cardmarketElement = document.getElementById('cardmarket-link');
-
-    if (cartaEnIngles.prices?.eur) {
-      priceElement.textContent = `${cartaEnIngles.prices.eur} €`;
-    } else {
-      priceElement.textContent = 'No disponible';
-    }
-
-    if (cartaEnIngles.purchase_uris?.cardmarket) {
-      cardmarketElement.innerHTML = `
-        <a href="${cartaEnIngles.purchase_uris.cardmarket}" target="_blank" class="btn btn-primary mt-2">
-          Cómprala en Cardmarket
-        </a>
-      `;
-    }
-
-    // Llamada a la función de generar gráfica
-    generateCardChart(cartaEnIngles);
-    // añadimos el boton de otra busqueda
-    document.getElementById('otra-busqueda').innerHTML= '<a href="../index.html" class="btn btn-primary">Hacer otra búsqueda</a>'
-  } catch (error) {
-    console.error('Error al obtener el precio en inglés:', error);
-    document.getElementById('card-price').textContent = 'No disponible';
-  }
-}
-
 // Llamamos a la función asíncrona
-cargarDetalleCarta();
+document.addEventListener("DOMContentLoaded", cargarDetalleCarta);
 
