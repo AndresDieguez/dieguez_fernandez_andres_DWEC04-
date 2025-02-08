@@ -6,19 +6,20 @@ const cardAPI = new CardAPI();
 
 let currentPage = 1;
 let currentQuery = "";
+let titSet = document.getElementById('tituloSet')
 document.getElementById("pagination").style.visibility = 'hidden';
 
 // Obtén los parámetros 'set' y 'lang' de la URL si están presentes
 const urlParams = new URLSearchParams(window.location.search);
 let setQuery = urlParams.get('set');
 const langQuery = urlParams.get('lang');
-const searchQuery = urlParams.get('q');  // Añadido para capturar el query 'q' de la URL
+const searchQuery = urlParams.get('q');  
 
 // Obtener el formulario y la posición de desplazamiento
 const formularioBusqueda = document.getElementById("formularioBusqueda");
 const formularioPosicion = formularioBusqueda.offsetTop;
 
-// Función que verifica el desplazamiento
+// Función que verifica el desplazamiento para el menu de busqueda
 function controlarFijo() {
     if (window.pageYOffset > formularioPosicion) {
         formularioBusqueda.classList.add("fixed"); // Añade la clase 'fixed' cuando el formulario llega a la parte superior
@@ -36,17 +37,19 @@ if (setQuery) {
         currentQuery += `+lang:${langQuery}+order:color`;
     }
 
-    // Buscar el nombre completo del set en la API de Scryfall
-    (async function fetchSetName() {
+    // Buscar el nombre completo del set con el  método de la clase CardApi
+    (async function mostrarNombreSet() {
         try {
-            const setData = await cardAPI.buscarNombreSet(setQuery)
+            const setData = await cardAPI.fetchSetByName(setQuery)
+            //console.log('setQuery: ',setQuery);
+            //console.log('setData',setData);
             if (setData && setData.name) {
                 // Mostrar el nombre del set en el h2 con id 'tituloSet'
-                document.getElementById('tituloSet').innerHTML = `Set completo de ${setData.name}`;
+                titSet.innerHTML = `Set completo de ${setData.name}`;
             }
         } catch (error) {
             console.error("Error al obtener el nombre del set:", error);
-            document.getElementById('tituloSet').innerHTML = "Set completo";
+            titSet.innerHTML = "Set completo";
         }
     })();
 
@@ -59,14 +62,14 @@ if (setQuery) {
     // Si no hay set en la URL, inicializa currentQuery vacío para búsquedas generales
     currentQuery = "";
     // Limpia el contenido del h2 'tituloSet' si no hay búsqueda de set
-    document.getElementById('tituloSet').innerHTML = "";
+    titSet.innerHTML = "";
 }
 
 // Función para obtener la lista de sets y poblar el select
+// usamos el metodo de la clase que busca todos los sets
 async function fetchSets() {
     try {
-        //const response = await fetch("https://api.scryfall.com/sets");
-        //const data = await response.json();
+        //https://api.scryfall.com/sets"
         const setsCartas = await cardAPI.fetchCardsSet()
         const select = document.getElementById("set-select");
         const selectLang = document.getElementById("language-select");
@@ -89,7 +92,7 @@ async function fetchSets() {
     }
 }
 
-// Función para obtener cartas desde la API de Scryfall
+// Función para obtener las cartas buscadas usamos el metodo correspondiente de la clase CardApi
 async function fetchCards(query, page = 1) {
     const cardsContainer = document.getElementById("cards-container");
     
@@ -101,15 +104,11 @@ async function fetchCards(query, page = 1) {
     try {
         const cartasBuscadas = await cardAPI.searchCards(query,page);
         console.log('datos de la consulta clase: ',cartasBuscadas);
+        console.log('cartas encontradas', cartasBuscadas.total_cards);
         // Eliminar el mensaje de carga si está presente
         const loadingMessage = document.getElementById("loading-message");
-        if (loadingMessage) loadingMessage.remove();
 
-        // Si no se encontraron resultados, mostrar mensaje
-        if (!cartasBuscadas.data || cartasBuscadas.data.length === 0) {
-            cardsContainer.innerHTML = "<p>No se encontraron resultados.</p>";
-            return;
-        }
+        if (loadingMessage) loadingMessage.remove();
 
         cartasBuscadas.data.forEach(card => {
             const col = document.createElement("div");
@@ -158,8 +157,9 @@ async function fetchCards(query, page = 1) {
         document.getElementById("pagination").style.display = cartasBuscadas.has_more ? "block" : "none";
     } catch (error) {
         console.error("Error al obtener las cartas:", error);
-        cardsContainer.innerHTML = "<h2 class='text-center'>Rayos!!! Todavía No disponemos de esas cartas en ese idioma.</h2>";
-        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/los siento.jpg" alt="cartas no disponibles">';
+        cardsContainer.innerHTML = "<h2 class='text-center'>Rayos!!! No hay resultados, prueba otra cosa</h2>";
+        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/lo-siento.jpg" alt="cartas no disponibles">';
+        document.getElementById("pagination").style.visibility = 'hidden';
     }
 }
 // funcion para cargar las estadisticas tras el formulario
@@ -256,7 +256,7 @@ document.getElementById("search-form").addEventListener("submit", function (even
     currentPage = 1;
     fetchCards(currentQuery, currentPage);
 
-    document.getElementById('tituloSet').innerHTML = "";
+    titSet.innerHTML = "";
 });
 
 // Detectar el desplazamiento en la página para el menu de busqueda fijo
@@ -265,10 +265,13 @@ window.addEventListener("scroll", controlarFijo);
 // cargamos estadisticas
 document.addEventListener("DOMContentLoaded", cargarEstadisticas);
 
-// Ejecutar la función cuando la página se cargue y cuando el usuario vuelva con "Atrás"
+// Ejecutar la función de obeter cartas aleatorias cuando la página se cargue 
+// y no se vaya a mostrar el set completo (para evitar errores)
+// y cuando el usuario vuelva con "Atrás"
+if (!setQuery){
 document.addEventListener("DOMContentLoaded", obtenerCartasAleatorias);
 window.addEventListener("pageshow", obtenerCartasAleatorias);
-
+}
 // Cargar más cartas al hacer clic
 document.getElementById("load-more").addEventListener("click", function () {
     currentPage++;

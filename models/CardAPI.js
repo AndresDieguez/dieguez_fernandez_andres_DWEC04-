@@ -1,19 +1,17 @@
 class CardAPI {
   
     constructor(baseURL = 'https://api.scryfall.com/') {
-        this.baseURL = baseURL; // Guardamos la URL base en la instancia
+        this.baseURL = baseURL; 
     }
     
     async fetchData(endpoint) {
-        const url = new URL(`${this.baseURL}${endpoint}`);
-
         try {
-            const response = await fetch(url);
+            const response = await fetch(`${this.baseURL}${endpoint}`);
             if (!response.ok) throw new Error(`Error en la API: ${response.status} ${response.statusText}`);
             return await response.json();
         } catch (error) {
-            console.error(`Error en la solicitud a ${url}:`, error);
-            return { status: "error", message: error.message };
+            console.error(`Error en la solicitud a ${endpoint}:`, error);
+            return { status: "error", message: error.message, details: error.stack };
         }
     }
 
@@ -22,19 +20,19 @@ class CardAPI {
     }
 
     async fetchPriceInEnglish(set, name) {
-        return this.fetchData(`cards/named?set=${set}&exact=${encodeURIComponent(name)}&lang=en`);
+        return this.fetchData(`cards/named?set=${encodeURIComponent(set)}&exact=${encodeURIComponent(name)}&lang=en`);
     }
 
     async fetchCardsSet() {
-        return this.fetchData('sets/');
+        return this.fetchData('sets');
     }
 
     async fetchCardNames() {
-        return this.fetchData('catalog/card-names/');
+        return this.fetchData('catalog/card-names');
     }
 
-    async buscarNombreSet(setQuery) {
-        return this.fetchData(`sets/${setQuery}`);
+    async fetchSetByName(setQuery) {
+        return this.fetchData(`sets/${encodeURIComponent(setQuery)}`);
     }
 
     async searchCards(query, page = 1) {
