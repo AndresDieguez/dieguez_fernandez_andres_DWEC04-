@@ -74,10 +74,13 @@ async function fetchSets() {
         const select = document.getElementById("set-select");
         const selectLang = document.getElementById("language-select");
         setsCartas.data.forEach(set => {
+            // todo lo de art series no se juega, de momento no quiero que aparezca en el selector
+            if (!set.name.includes('Art Series')) { 
             const option = document.createElement("option");
             option.value = set.code;
             option.textContent = set.name;
             select.appendChild(option);
+            }           
         });
 
         // Si 'set' o el idioma ya está en la URL, seleccionamos el set correspondiente en su select
@@ -158,7 +161,7 @@ async function fetchCards(query, page = 1) {
     } catch (error) {
         console.error("Error al obtener las cartas:", error);
         cardsContainer.innerHTML = "<h2 class='text-center'>Rayos!!! No hay resultados, prueba otra cosa</h2>";
-        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/los siento.jpg" alt="cartas no disponibles">';
+        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/lo-siento.jpg" alt="cartas no disponibles">';
         document.getElementById("pagination").style.visibility = 'hidden';
     }
 }
@@ -179,7 +182,7 @@ async function cargarEstadisticas() {
         console.error("Error al cargar estadísticas:", error);
     }
 }
-
+// funciona para animar el conteo
 function count(numero, selector) {
     let counter = { value: 0 };
     let element = document.getElementById(selector);

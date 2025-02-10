@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 
-<body>
-  <div class="container mt-4">
-    <header>
+<body>  
+  <div class="container mt-4">   
+      <header>
       <h1 class="text-center logo">
         <span>Magic Insight</span>
         <a href="/"><img class="img-fluid" src="imagenes/logo-magic.jpg" alt="Magic: The Gathering Spoiler"></a>
@@ -46,14 +46,15 @@
           </select>
 
           <select id="language-select" class="form-select w-25 me-2">
-            <option value="es" selected>Español</option>
-            <option value="en">Inglés</option>
+            <option value="es">Español</option>
+            <option value="en" selected>Inglés</option>
             <option value="fr">Francés</option>
             <option value="de">Alemán</option>
             <option value="it">Italiano</option>
             <option value="pt">Portugués</option>
             <option value="jp">Japonés</option>
           </select>
+          
           <button type="submit" class="btn btn-primary">Buscar</button>
           <!-- Icono de información para abrir el modal -->
           <i class="ms-2 bi bi-info-circle text-info fs-4" role="button" data-bs-toggle="modal"
@@ -62,7 +63,7 @@
       </div>
 
 
-      <!-- Modal de Búsqueda Avanzada -->
+      <!-- Modal explicación de comandos de Búsqueda Avanzada -->
       <div class="modal fade" id="modalBusquedaAvanzada" tabindex="-1" aria-labelledby="tituloBusquedaAvanzada"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">

@@ -1,5 +1,5 @@
 class Card {
-    constructor(name, artist, type, manaCost, text, rarity, set, setName, releaseDate) {
+    constructor(name, artist, type, manaCost, text, rarity, set, setName, lang, legalities, layout, releaseDate) {
         this.name = name;
         this.artist = artist;
         this.type = type;
@@ -8,10 +8,14 @@ class Card {
         this.rarity = rarity;
         this.set = set;
         this.setName = setName;
+        this.lang = lang;
+        this.legalities = legalities;
+        this.layout = layout;
         this.releaseDate = new Date(releaseDate).toLocaleDateString("es-ES"); // Formato español
     }
 
     // Método estático para crear una instancia de Card desde los datos de la API
+    // data es el json de la api
     static fromAPI(data) {
         return new Card(
             data.printed_name || data.name,
@@ -22,7 +26,11 @@ class Card {
             data.rarity || "No especificado",
             data.set,
             data.set_name || "No especificado",
+            data.lang || "No especificado",
+            data.legalities || "No disponible",
+            data.layout || "No disponible",
             data.released_at || "No disponible"
+            
         );
     }
 
@@ -49,8 +57,7 @@ class Card {
             <p><strong>Coste:</strong> ${this.convertManaToIcons()}</p>
             <p><strong>Texto de la carta:</strong> ${this.text}</p>
             <p><strong>Rareza:</strong> ${this.rarity}</p>
-            <p><strong>Set: </strong>
-                <a href="../index.html?set=${this.set}" class="set-link">${this.setName}</a>
+            <p><strong>Set: </strong><a href="../index.html?set=${this.set}&lang=${this.lang}" class="set-link">${this.setName || 'No especificado'}</a> 
                 (Sigue el enlace para ver el set completo)
             </p>
             <p><strong>Fecha de lanzamiento:</strong> ${this.releaseDate}</p>
