@@ -12,8 +12,8 @@ document.getElementById("pagination").style.visibility = 'hidden';
 // Obtén los parámetros 'set' y 'lang' de la URL si están presentes
 const urlParams = new URLSearchParams(window.location.search);
 let setQuery = urlParams.get('set');
-const langQuery = urlParams.get('lang');
-const searchQuery = urlParams.get('q');  
+let langQuery = urlParams.get('lang');
+let searchQuery = urlParams.get('q');  
 
 // Obtener el formulario y la posición de desplazamiento
 const formularioBusqueda = document.getElementById("formularioBusqueda");
@@ -35,6 +35,7 @@ if (setQuery) {
     // Si 'lang' está presente, lo agregamos a la consulta
     if (langQuery) {
         currentQuery += `+lang:${langQuery}+order:color`;
+        document.getElementById("order-select").value = 'color';
     }
 
     // Buscar el nombre completo del set con el  método de la clase CardApi
@@ -237,6 +238,8 @@ document.getElementById("search-form").addEventListener("submit", function (even
     const searchInput = document.getElementById("search-input").value.trim();
     const setValue = document.getElementById("set-select").value;
     const formatValue = document.getElementById("format-select").value;
+    const orderValue = document.getElementById("order-select").value;
+    const directionValue = document.getElementById("direction-select").value;
     const languageValue = document.getElementById("language-select").value;
     document.getElementById("pagination").style.visibility = 'visible';
 
@@ -245,6 +248,8 @@ document.getElementById("search-form").addEventListener("submit", function (even
     if (searchInput) query = encodeURIComponent(searchInput);
     if (setValue) query += `+set:${encodeURIComponent(setValue)}`;
     if (formatValue) query += `+f%3A${encodeURIComponent(formatValue)}`;
+    if (orderValue) query += `+order:${encodeURIComponent(orderValue)}`;
+    if (directionValue) query += `+direction:${encodeURIComponent(directionValue)}`;
     if (languageValue && languageValue !== 'es') query += `+lang%3A${encodeURIComponent(languageValue)}`;
     else if (languageValue === 'es') query += `+lang%3Aes`;
 
@@ -269,11 +274,10 @@ window.addEventListener("scroll", controlarFijo);
 document.addEventListener("DOMContentLoaded", cargarEstadisticas);
 
 // Ejecutar la función de obeter cartas aleatorias cuando la página se cargue 
-// y no se vaya a mostrar el set completo (para evitar errores)
 // y cuando el usuario vuelva con "Atrás"
 if (!setQuery){
-document.addEventListener("DOMContentLoaded", obtenerCartasAleatorias);
-window.addEventListener("pageshow", obtenerCartasAleatorias);
+    document.addEventListener("DOMContentLoaded", obtenerCartasAleatorias);
+    window.addEventListener("pageshow", obtenerCartasAleatorias);
 }
 // Cargar más cartas al hacer clic
 document.getElementById("load-more").addEventListener("click", function () {

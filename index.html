@@ -19,10 +19,10 @@
       </h1>
       <div class="formulario-busqueda" id="formularioBusqueda">
         <form id="search-form" class="d-flex justify-content-center">
-          <input type="text" id="search-input" class="form-control w-50 me-2"
-            placeholder="Buscar cartas por nombre o por c:red t:planeswalker">
+          <input type="text" id="search-input" class="form-control me-2 w-50"
+            placeholder="Buscar por nombre o expresión">
 
-          <select id="format-select" class="form-select w-25 me-2">
+          <select id="format-select" class="form-select me-2 w-25">
             <option value="" selected>Todos los formatos</option>
             <option value="standard">Standard</option>
             <option value="future">Future Standard</option>
@@ -45,9 +45,27 @@
             <!-- Los sets se cargarán dinámicamente aquí -->
           </select>
 
+          <select id="order-select" class="form-select w-25 me-2">
+            <option value="">Ordenar por:</option>
+            <option value="color">Color</option>
+            <option value="name">Nombre</option>
+            <option value="rarity">Rareza</option>
+            <option value="cmc">Coste de Maná</option>
+            <option value="power">Fuerza</option>
+            <option value="toughness">Resistencia</option>
+            <option value="artist">Artista</option>                       
+          </select>
+
+          <select id="direction-select" class="form-select w-25 me-2">
+            <option value="">Dirección:</option>
+            <option value="asc">Ascendente</option>
+            <option value="desc">Descendente</option>                     
+          </select>
+
           <select id="language-select" class="form-select w-25 me-2">
+            <option value="any" selected>Idioma:</option>
             <option value="es">Español</option>
-            <option value="en" selected>Inglés</option>
+            <option value="en" >Inglés</option>
             <option value="fr">Francés</option>
             <option value="de">Alemán</option>
             <option value="it">Italiano</option>
