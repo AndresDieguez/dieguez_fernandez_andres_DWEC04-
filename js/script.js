@@ -158,7 +158,7 @@ async function fetchCards(query, page = 1) {
     } catch (error) {
         console.error("Error al obtener las cartas:", error);
         cardsContainer.innerHTML = "<h2 class='text-center'>Rayos!!! No hay resultados, prueba otra cosa</h2>";
-        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/lo-siento.jpg" alt="cartas no disponibles">';
+        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/los siento.jpg" alt="cartas no disponibles">';
         document.getElementById("pagination").style.visibility = 'hidden';
     }
 }
