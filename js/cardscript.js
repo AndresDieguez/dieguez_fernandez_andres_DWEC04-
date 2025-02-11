@@ -40,16 +40,13 @@ async function cargarDetalleCarta() {
 // generamos los enlaces de interés
 // llamamos a la funcion que crea la grafica
 function renderCardDetails(carta,data) {
-  const cardDetails = document.getElementById('card-details');
-  if (!cardDetails) {
-    console.error('No se encontró el contenedor "card-details" en el DOM.');
-    return;
-  }
   console.log("Datos de la carta:", data);
-
+  const cardDetails = document.getElementById('card-details');
+  
+  // mostramos los detalles principales de la carta
   let cardText = carta.toHTML();
 
-  // mostramos los formatos en los que es legal la carta
+  // mostramos si la carta no se juega o los formatos en los que es legal la carta
   if (carta.legalities && carta.layout != "token" && carta.layout != "art_series" && carta.layout != "emblem" && carta.layout != "emblem") {
     cardText += `<h3 class="mb-3 mt-3">Legal en los siguientes formatos:</h3>`;
   } else {
@@ -62,7 +59,7 @@ function renderCardDetails(carta,data) {
     }
   }
 
- // añadimos funcionalidades, voltear cartas, precios, enlaces y graficos
+ // añadimos funcionalidades e imagenes, voltear cartas, precios, enlaces y grafica
   let cardHTML = '';
 
   if (data.card_faces) {
@@ -178,7 +175,7 @@ async function buscarPrecioIngles(set, name) {
     // añadimos el boton de otra busqueda
     document.getElementById('otra-busqueda').innerHTML= '<a href="../index.html" class="btn btn-primary">Hacer otra búsqueda</a>'
   } catch (error) {
-    console.error('Error al obtener el precio en inglés:', error);
+    console.error('Error no se ha podido obtener el precio', error);
     document.getElementById('card-price').textContent = 'No disponible';
   }
 }

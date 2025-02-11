@@ -120,8 +120,8 @@ async function fetchCards(query, page = 1) {
 
             let imageSrc = card.image_uris ? card.image_uris.normal : "../imagenes/sinimagen.jpg";
 
-            if (card.layout === "transform" || card.layout === "modal_dfc" || card.layout === "art_series") {
-                imageSrc = card.card_faces[0].image_uris?.normal || '../imagenes/sinimagen.jpg';
+            if (card.layout === "transform" || card.layout === "modal_dfc" || card.layout === "art_series" || card.layout =="double_faced_token") {
+                imageSrc = card.card_faces[0].image_uris?.normal;
 
                 col.innerHTML = `
                 <div class="card-container">
