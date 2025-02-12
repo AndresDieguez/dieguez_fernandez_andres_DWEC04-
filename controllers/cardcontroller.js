@@ -1,6 +1,6 @@
 import CardAPI from '../models/CardAPI.js';
 import Card from '../models/Card.js';
-import { renderCardDetails, buscarPrecioIngles, generateCardChart} from '../views/CardView.js';
+import { renderCardDetails, buscarPrecioIngles} from '../views/CardView.js';
 
 const cardAPI = new CardAPI();
 const urlParams = new URLSearchParams(window.location.search);

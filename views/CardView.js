@@ -10,34 +10,30 @@ export function renderCardDetails(carta, data) {
     let cardText = carta.toHTML();
 
     // mostramos si la carta no se juega o los formatos en los que es legal la carta
-    if (
-        carta.legalities &&
-        carta.layout != "token" &&
-        carta.layout != "art_series" &&
-        carta.layout != "emblem" &&
-        carta.layout != "emblem"
-    ) {
-        cardText += `<h3 class="mb-3 mt-3">Legal en los siguientes formatos:</h3>`;
+    if (carta.legalities && carta.layout != "token" && carta.layout != "art_series" && carta.layout != "emblem") {
+        cardText += `<h3 id ="textos-legal" class="mb-3 mt-3">Legal en los siguientes formatos:</h3>`;
     } else {
-        cardText += `<h3 class="mb-3 mt-3">Esta carta No se juega, es de arte o se trata de un Token/Emblema</h3>`;
+        cardText += `<h3 class="mb-3 mt-3">Esta carta, es de arte o se trata de un Token/Emblema</h3>`;
     }
 
+    let esIlegalEnTodos = true;
     for (let formato in carta.legalities) {
         if (carta.legalities[formato] != `not_legal`) {
-            cardText += `<span class="formato-legal">${formato}</span> `;
+            cardText += `<span class="formato-legal">${formato}</span> `; 
+            esIlegalEnTodos = false;          
         }
     }
-
-    // añadimos funcionalidades e imagenes, voltear cartas, precios, enlaces y grafica
+    if (esIlegalEnTodos) {
+      cardText += `<span class="formato-ilegal">Esta carta no se juega o NO se considera como LEGAL en ningún formato</span>`;
+    }
+    // añadimos funcionalidades, voltear cartas e imagenes, precios, enlaces y grafica
     let cardHTML = "";
 
     if (data.card_faces) {
         const frontImage =
-            data.card_faces[0].image_uris?.normal ||
-            "../imagenes/sinimagen.jpg";
+            data.card_faces[0].image_uris?.normal || "../imagenes/sinimagen.jpg";
         const backImage =
-            data.card_faces[1]?.image_uris?.normal ||
-            "../imagenes/sinimagen.jpg";
+            data.card_faces[1]?.image_uris?.normal || "../imagenes/sinimagen.jpg";
 
         cardHTML = `
         <div class="col-12 col-md-6 col-lg-4 card-container">
@@ -73,7 +69,7 @@ export function renderCardDetails(carta, data) {
     }
 
     cardDetails.innerHTML = cardHTML;
-
+    
     // Funcionalidad para voltear la carta si tiene varias caras
     if (data.card_faces) {
         const flipCard = document.getElementById("flip-card");
@@ -122,7 +118,7 @@ export async function buscarPrecioIngles(cartaEnIngles) {
   
       const priceElement = document.getElementById('card-price');
       const cardmarketElement = document.getElementById('cardmarket-link');
-  
+      let existePrecio = true;
       if (cartaEnIngles.prices?.eur) {
         priceElement.textContent = `${cartaEnIngles.prices.eur} €`;
       } else if (cartaEnIngles.prices?.eur_foil) {
@@ -131,6 +127,7 @@ export async function buscarPrecioIngles(cartaEnIngles) {
         priceElement.textContent = `${cartaEnIngles.prices.usd_foil} €`;
       } else {
         priceElement.textContent = 'No disponemos de precios para esta carta, puedes mirar en Cardmarket';
+        existePrecio = false;
       }
   
       if (cartaEnIngles.purchase_uris?.cardmarket) {
@@ -141,8 +138,13 @@ export async function buscarPrecioIngles(cartaEnIngles) {
         `;
       }
   
-      // Llamada a la función de generar gráfica
-      generateCardChart(cartaEnIngles);
+      // Llamada a la función de pintar gráfica
+      if (existePrecio){
+        generateCardChart(cartaEnIngles);
+      } else {
+        document.getElementById('cardChart').style.display = 'none';
+      }
+      
       // añadimos el boton de otra busqueda
       document.getElementById('otra-busqueda').innerHTML= '<a href="../index.html" class="btn btn-primary">Hacer otra búsqueda</a>'
     } catch (error) {
@@ -151,8 +153,8 @@ export async function buscarPrecioIngles(cartaEnIngles) {
     }
   }
 
-// Función para generar la gráfica con chart.js
-export function generateCardChart(carta) {
+// Función para pintar la gráfica con chart.js
+function generateCardChart(carta) {
     const ctx = document.getElementById('cardChart').getContext('2d');
     //console.log('Precios de la carta:', carta.prices);
   

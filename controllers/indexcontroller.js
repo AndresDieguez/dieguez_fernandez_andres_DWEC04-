@@ -252,22 +252,27 @@ document.getElementById("search-form").addEventListener("submit", function (even
     titSet.innerHTML = "";
 });
 
-// cargamos estadisticas del inicio
-document.addEventListener("DOMContentLoaded", cargarEstadisticas);
+document.addEventListener("DOMContentLoaded", init);
 
-// Ejecutar la función de obeter cartas aleatorias cuando la página se cargue 
-// y cuando el usuario vuelva con "Atrás"
-if (!setQuery){
-    document.addEventListener("DOMContentLoaded", obtenerCartasAleatorias);
-    window.addEventListener("pageshow", obtenerCartasAleatorias);
+function init() {
+    cargarEstadisticas();
+    fetchSets(); // Poblar el select de sets
+
+    if (!setQuery) {
+        obtenerCartasAleatorias();
+        window.addEventListener("pageshow", obtenerCartasAleatorias);
+    }
+
+    const loadMoreBtn = document.getElementById("load-more");
+
+    loadMoreBtn.addEventListener("click", function () {
+        loadMoreBtn.textContent = "Cargando..."; // Cambia el texto del botón
+        currentPage++;
+
+        fetchCards(currentQuery, currentPage).then(() => {
+            loadMoreBtn.textContent = "Cargar más"; // Restaura el texto cuando termine
+        }).catch(() => {
+            loadMoreBtn.textContent = "Cargar más"; // Restaura el texto en caso de error
+        });
+    });
 }
-// Cargar más cartas al hacer clic
-document.getElementById("load-more").addEventListener("click", function () {
-    currentPage++;
-    fetchCards(currentQuery, currentPage);
-});
-
-// Llamar a la función para cargar los sets y poblar el select de sets
-document.addEventListener("DOMContentLoaded", fetchSets);
-
-
