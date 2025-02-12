@@ -1,6 +1,7 @@
 class Card {
-    constructor(name, artist, type, manaCost, text, rarity, set, setName, lang, legalities, layout, releaseDate) {
+    constructor(name, printed_name, artist, type, manaCost, text, rarity, set, setName, lang, legalities, layout, releaseDate) {       
         this.name = name;
+        this.printed_name = printed_name;
         this.artist = artist;
         this.type = type;
         this.manaCost = manaCost;
@@ -18,7 +19,8 @@ class Card {
     // le pasaremos como parámetro el json que devuelve la api
     static fromAPI(data) {
         return new Card(
-            data.printed_name || data.name,
+            data.name || "Desconocido",
+            data.printed_name || "Desconocido",           
             data.artist || "Desconocido",
             data.printed_type_line || data.type_line || "No especificado",
             data.mana_cost || "No especificado",
@@ -51,7 +53,7 @@ class Card {
     // Método para generar HTML con los datos de la carta
     toHTML() {
         return `
-            <h2>${this.name}</h2>
+            <h2>${this.printed_name}</h2>
             <p><strong>Artista:</strong> ${this.artist}</p>
             <p><strong>Tipo:</strong> ${this.type}</p>
             <p><strong>Coste:</strong> ${this.convertManaToIcons()}</p>

@@ -72,7 +72,6 @@ if (setQuery) {
 // usamos el metodo de la clase que busca todos los sets
 async function fetchSets() {
     try {
-        //https://api.scryfall.com/sets"
         const setsCartas = await cardAPI.fetchCardsSet()
         const select = document.getElementById("set-select");
         const selectLang = document.getElementById("language-select");
