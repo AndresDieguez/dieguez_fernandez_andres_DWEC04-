@@ -14,11 +14,11 @@ class CardAPI {
             return { status: "error", message: error.message, details: error.stack };
         }
     }
-    // método para obtener detalles de una carta
+    // método para obtener detalles de una carta pediante su id
     async fetchCardDetails(id) {
         return this.fetchData(`cards/${id}`);
     }
-    // método para obtener detalles en ingles para el precio
+    // método para obtener ciertos detalles en ingles como el precio no disponible en otros idiomas
     async fetchPriceInEnglish(set, name) {
         return this.fetchData(`cards/named?set=${encodeURIComponent(set)}&exact=${encodeURIComponent(name)}&lang=en`);
     }

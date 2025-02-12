@@ -22,7 +22,7 @@ async function cargarDetalleCarta() {
       // llamamos al Método estático fromAPI(data) que crea una instancia de Card desde los datos (data) de la API
 
       const data = await cardAPI.fetchCardDetails(cardId);  // https://api.scryfall.com/cards/${id}
-      const carta = Card.fromAPI(data);  
+      const carta = Card.fromAPI(data);  // creamos una instancia de Card con los datos de la API
 
       renderCardDetails(carta,data); // Renderizamos los detalles de la carta
 
@@ -40,7 +40,7 @@ async function cargarDetalleCarta() {
 // generamos los enlaces de interés
 // llamamos a la funcion que crea la grafica
 function renderCardDetails(carta,data) {
-  console.log("Datos de la carta:", data);
+  //console.log("Datos de la carta:", data);
   const cardDetails = document.getElementById('card-details');
   
   // mostramos los detalles principales de la carta
@@ -50,7 +50,7 @@ function renderCardDetails(carta,data) {
   if (carta.legalities && carta.layout != "token" && carta.layout != "art_series" && carta.layout != "emblem" && carta.layout != "emblem") {
     cardText += `<h3 class="mb-3 mt-3">Legal en los siguientes formatos:</h3>`;
   } else {
-    cardText += `<h3 class="mb-3 mt-3">Esta carta No se juega</h3>`;
+    cardText += `<h3 class="mb-3 mt-3">Esta carta No se juega, es de arte o se trata de un Token/Emblema</h3>`;
   }
 
   for (let formato in carta.legalities) {
@@ -101,7 +101,7 @@ function renderCardDetails(carta,data) {
 
   cardDetails.innerHTML = cardHTML;
 
-  // Funcionalidad para voltear la carta si es transformable
+  // Funcionalidad para voltear la carta si tiene varias caras
   if (data.card_faces) {
     const flipCard = document.getElementById('flip-card');
     const flipIcon = document.querySelector('.flip-icon-detalle');
@@ -118,7 +118,7 @@ function renderCardDetails(carta,data) {
     document.getElementById('card-price').textContent ='No hay datos del precio'
   }
 
-  // Comprobamos si existen los Enlaces de interés y los insertamos
+  // Comprobamos si existen Enlaces de interés a la carta que estamos viendo y los insertamos
   if (data.related_uris) {
     let enlaces = '<h3>Enlaces de interés:</h3><ul>';
   
@@ -144,14 +144,14 @@ function renderCardDetails(carta,data) {
 
 }
 
-// Función para obtener precios de la carta en inglés pues en otros idiomas no vienen los precios
-// y el enlace al mercado Cardmarket
+// Función para obtener precios de la carta en inglés (en otros idiomas no vienen los precios)
+// y el enlace al mercado Cardmarket para la compra de la carta que estamos visualizando
 async function buscarPrecioIngles(set, name) {
 
   try {
 
     const cartaEnIngles = await cardAPI.fetchPriceInEnglish(set, name);
-    console.log("Datos en inglés de la carta:", cartaEnIngles);
+    //console.log("Datos en inglés de la carta:", cartaEnIngles);
 
     const priceElement = document.getElementById('card-price');
     const cardmarketElement = document.getElementById('cardmarket-link');
@@ -159,7 +159,7 @@ async function buscarPrecioIngles(set, name) {
     if (cartaEnIngles.prices?.eur) {
       priceElement.textContent = `${cartaEnIngles.prices.eur} €`;
     } else {
-      priceElement.textContent = 'No disponible';
+      priceElement.textContent = 'No disponemos de precios para esta carta, puedes mirar en Cardmarket';
     }
 
     if (cartaEnIngles.purchase_uris?.cardmarket) {
@@ -176,14 +176,14 @@ async function buscarPrecioIngles(set, name) {
     document.getElementById('otra-busqueda').innerHTML= '<a href="../index.html" class="btn btn-primary">Hacer otra búsqueda</a>'
   } catch (error) {
     console.error('Error no se ha podido obtener el precio', error);
-    document.getElementById('card-price').textContent = 'No disponible';
+    document.getElementById('card-price').textContent = 'No disponemos de precios para esta carta, puedes mirar en Cardmarket';
   }
 }
 
 // Función para generar la gráfica con chart.js
 function generateCardChart(carta) {
   const ctx = document.getElementById('cardChart').getContext('2d');
-  console.log('Precios de la carta:', carta.prices);
+  //console.log('Precios de la carta:', carta.prices);
 
   document.getElementById('titulo-grafica').textContent = 'Precio de la Carta en Diferentes Monedas-Mercados'
   let tix = document.getElementById('tix');
@@ -246,7 +246,7 @@ function generateCardChart(carta) {
     },
     plugins: {
       legend: {
-        display: false // Oculta la leyenda y su cuadro de color
+        display: false // Oculta la leyenda, no hace falta...
       }
     }
   };

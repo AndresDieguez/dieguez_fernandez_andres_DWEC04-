@@ -1,7 +1,7 @@
 // Importamos la clase CardAPI
 import CardAPI from '../models/CardAPI.js';
 
-// Instanciamos la clase
+// Instanciamos la clase CardAPI
 const cardAPI = new CardAPI();
 
 let currentPage = 1;
@@ -15,20 +15,22 @@ let setQuery = urlParams.get('set');
 let langQuery = urlParams.get('lang');
 let searchQuery = urlParams.get('q');  
 
-// Obtener el formulario y la posición de desplazamiento
+// Obtener el formulario y la posición de desplazamiento para que el menu de busqueda flote se quede fijo
 const formularioBusqueda = document.getElementById("formularioBusqueda");
 const formularioPosicion = formularioBusqueda.offsetTop;
 
 // Función que verifica el desplazamiento para el menu de busqueda
 function controlarFijo() {
     if (window.pageYOffset > formularioPosicion) {
-        formularioBusqueda.classList.add("fixed"); // Añade la clase 'fixed' cuando el formulario llega a la parte superior
+        // Añade la clase 'fixed' cuando el formulario llega a la parte superior
+        formularioBusqueda.classList.add("fixed"); 
     } else {
-        formularioBusqueda.classList.remove("fixed"); // Elimina la clase 'fixed' cuando el formulario ya no está en la parte superior
+        // Elimina la clase 'fixed' cuando el formulario ya no está en la parte superior
+        formularioBusqueda.classList.remove("fixed"); 
     }
 }
 
-// Si 'set' está presente en la URL, actualiza la consulta y muestra el nombre del set completo
+// Si 'set' está presente en la URL, actualiza la consulta y muestra el nombre y set completo
 if (setQuery) {
     currentQuery = `set:${setQuery}`;
     document.getElementById("pagination").style.visibility = 'visible';
@@ -107,8 +109,8 @@ async function fetchCards(query, page = 1) {
 
     try {
         const cartasBuscadas = await cardAPI.searchCards(query,page);
-        console.log('datos de la consulta clase: ',cartasBuscadas);
-        console.log('cartas encontradas', cartasBuscadas.total_cards);
+        //console.log('datos de la consulta clase: ',cartasBuscadas);
+        //console.log('cartas encontradas', cartasBuscadas.total_cards);
         // Eliminar el mensaje de carga si está presente
         const loadingMessage = document.getElementById("loading-message");
 
@@ -119,7 +121,7 @@ async function fetchCards(query, page = 1) {
             col.classList.add("col-sm-6", "col-md-4", "col-lg-3", "mtg-card");
 
             let imageSrc = card.image_uris ? card.image_uris.normal : "../imagenes/sinimagen.jpg";
-
+            // cartas con doble cara
             if (card.layout === "transform" || card.layout === "modal_dfc" || card.layout === "art_series" || card.layout =="double_faced_token") {
                 imageSrc = card.card_faces[0].image_uris?.normal;
 
@@ -162,7 +164,8 @@ async function fetchCards(query, page = 1) {
     } catch (error) {
         console.error("Error al obtener las cartas:", error);
         cardsContainer.innerHTML = "<h2 class='text-center'>Rayos!!! No hay resultados, prueba otra cosa</h2>";
-        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto;" src="imagenes/lo-siento.jpg" alt="cartas no disponibles">';
+        cardsContainer.innerHTML += '<img style="max-width:50%; margin:15px auto 0 auto;" src="imagenes/lo-siento.jpg" alt="cartas no disponibles">';
+        cardsContainer.innerHTML += '<small>*Puedes probar a cambiar al idioma <strong>inglés</strong> y hacer una busqueda en <strong>todos los formatos</strong></small>';
         document.getElementById("pagination").style.visibility = 'hidden';
     }
 }
@@ -177,13 +180,13 @@ async function cargarEstadisticas() {
 
         const latestSetElement = document.getElementById('latest-set');
         if (latestSetElement) {
-            latestSetElement.textContent = setsData.data[0].name;
+            latestSetElement.textContent = setsData.data[1].name;
         }
     } catch (error) {
         console.error("Error al cargar estadísticas:", error);
     }
 }
-// funciona para animar el conteo
+// funcion para animar el conteo de set y cartas al inicio
 function count(numero, selector) {
     let counter = { value: 0 };
     let element = document.getElementById(selector);
@@ -241,7 +244,6 @@ document.getElementById("search-form").addEventListener("submit", function (even
     const orderValue = document.getElementById("order-select").value;
     const directionValue = document.getElementById("direction-select").value;
     const languageValue = document.getElementById("language-select").value;
-    document.getElementById("pagination").style.visibility = 'visible';
 
     let query = "";
 
@@ -256,10 +258,9 @@ document.getElementById("search-form").addEventListener("submit", function (even
     if (!query) {
         query = "";
     }
-    console.log('busqueda realizada: ',query);
+    //console.log('busqueda realizada: ',query);
     document.getElementById("cards-container").innerHTML = "";
-    document.getElementById("pagination").style.display = "block";
-
+    document.getElementById("pagination").style.visibility = 'visible';
     currentQuery = query;
     currentPage = 1;
     fetchCards(currentQuery, currentPage);
@@ -270,7 +271,7 @@ document.getElementById("search-form").addEventListener("submit", function (even
 // Detectar el desplazamiento en la página para el menu de busqueda fijo
 window.addEventListener("scroll", controlarFijo);
 
-// cargamos estadisticas
+// cargamos estadisticas del inicio
 document.addEventListener("DOMContentLoaded", cargarEstadisticas);
 
 // Ejecutar la función de obeter cartas aleatorias cuando la página se cargue 
@@ -285,5 +286,5 @@ document.getElementById("load-more").addEventListener("click", function () {
     fetchCards(currentQuery, currentPage);
 });
 
-// Llamar a la función para cargar los sets al inicio
+// Llamar a la función para cargar los sets y poblar el select de sets
 document.addEventListener("DOMContentLoaded", fetchSets);

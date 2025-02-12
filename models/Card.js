@@ -15,7 +15,7 @@ class Card {
     }
 
     // Método estático para crear una instancia de Card desde los datos de la API
-    // data es el json de la api
+    // le pasaremos como parámetro el json que devuelve la api
     static fromAPI(data) {
         return new Card(
             data.printed_name || data.name,
