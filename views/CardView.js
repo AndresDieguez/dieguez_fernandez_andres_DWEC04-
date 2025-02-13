@@ -3,7 +3,7 @@
 // añadimos la funcionalidad de voltear la carta si contiene dos caras
 // añadimos la funcionalidad de enlaces de interes para la carta mostrada
 export function renderCardDetails(carta, data) {
-    console.log("Datos de la carta:", data);
+    //console.log("Datos de la carta:", data);
     const cardDetails = document.getElementById("card-details");
 
     // mostramos los detalles principales de la carta
@@ -114,7 +114,7 @@ export async function buscarPrecioIngles(cartaEnIngles) {
     try {
   
       //const cartaEnIngles = await cardAPI.fetchPriceInEnglish(set, name);
-      console.log("Datos en inglés de la carta:", cartaEnIngles);
+      //console.log("Datos en inglés de la carta:", cartaEnIngles);
   
       const priceElement = document.getElementById('card-price');
       const cardmarketElement = document.getElementById('cardmarket-link');
